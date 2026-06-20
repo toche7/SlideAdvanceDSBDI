@@ -978,8 +978,8 @@ Link for dataset download:
 ---
 ## Example Colab 
 
-- [Telco Churn Prediction Notebook](https://colab.research.google.com/github/IBM/telco-customer-churn-on-icp4d/blob/master/notebooks/Telco-Customer-Churn.ipynb)
-- [Bank Marketing Campaign Notebook](https://colab.research.google.com/github/IBM/bank-marketing-campaign/blob/master/notebooks/Bank-Marketing-Campaign.ipynb)
+- [Telco Churn Prediction Notebook](https://github.com/toche7/SlideAdvanceDSBDI/blob/main/notebook/TelCo_Customer_Churn.ipynb)
+- [Bank Marketing Campaign Notebook](https://github.com/toche7/SlideAdvanceDSBDI/blob/main/notebook/BankMarketing.ipynb)
 
 ---
 

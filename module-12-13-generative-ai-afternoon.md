@@ -22,8 +22,6 @@ math: katex
 # Generative AI for Data Work
 
 <div class="subtitle">LLMs, SQL, EDA, Extraction, and Chatbot Workflow</div>
-
-**BDAT501** Data Science Fundamentals
 คณะวิศวกรรมศาสตร์ · มหาวิทยาลัยมหิดล
 
 ผู้สอน: **ผศ.ดร. ทวีศักดิ์ สมานชื่น**
@@ -40,20 +38,6 @@ math: katex
 4. **เข้าใจภาพรวมของ chatbot, embeddings, RAG** และ vector database
 5. **ออกแบบ prompt สำหรับงานข้อมูลจริง** พร้อมจุดที่ต้องตรวจโดยมนุษย์
 
----
-
-## แผนการสอน 3 ชั่วโมง (ภาคบ่าย)
-
-1. 00:00-00:10: Opening และ framing
-2. 00:10-00:30: Demo SQL with LLM
-3. 00:30-00:50: Demo EDA with LLM
-4. 00:50-01:05: Mini theory: LLMs and embeddings
-5. 01:05-01:15: พัก
-6. 01:15-01:30: Chat with LLM (Groq)
-7. 01:30-02:10: Extraction และ validation demos
-8. 02:10-02:40: Generation และ summarization demos
-9. 02:40-02:50: Chatbot mini demo
-10. 02:50-03:00: RAG และ wrap-up
 
 ---
 
