@@ -23,7 +23,7 @@ math: katex
 
 <div class="subtitle">Model Selection and Evaluation (Morning Session)</div>
 
-**BDAT501** Data Science Fundamentals
+
 คณะวิศวกรรมศาสตร์ · มหาวิทยาลัยมหิดล
 
 ผู้สอน: **ผศ.ดร. ทวีศักดิ์ สมานชื่น**
@@ -151,20 +151,7 @@ plt.plot(x, y)
 </div>
 </div>
 
----
 
-## Mini Demo ที่จะทำในคาบ
-
-### สิ่งที่ผู้เรียนเห็น
-
-- เปิด Colab notebook ที่เตรียมไว้
-- ใช้ AI ช่วย generate cell แรกสำหรับ import และ load data
-- ให้ AI ช่วยแปลผล metric จาก baseline model
-
-### ผลลัพธ์ที่อยากได้
-
-- ผู้เรียนเริ่มงานได้เร็วขึ้น
-- เข้าใจว่าควรใช้ AI ตรงไหน และไม่ควรใช้ตรงไหน
 
 ---
 
@@ -176,8 +163,10 @@ plt.plot(x, y)
 Supervised vs Unsupervised in Practice
 
 ---
-
 ## โจทย์หลักของคาบนี้
+
+<div class="columns">
+<div>
 
 ### Use Case
 
@@ -186,12 +175,24 @@ Supervised vs Unsupervised in Practice
 - อินพุต: พฤติกรรมลูกค้า, ประวัติการใช้งาน, แพ็กเกจ
 - เอาต์พุต: ลูกค้าจะ churn หรือไม่ (Yes/No)
 - ประเภทปัญหา: **Supervised Classification**
+- Kaggle: [Telco Customer Churn](https://www.kaggle.com/blastchar/telco-customer-churn)
+
+</div>
+<div>
 
 ### Why this use case?
 
 - เชื่อมกับการตัดสินใจเชิงธุรกิจได้ชัด
 - ใช้สาธิต metrics ได้หลากหลาย
 - เหมาะกับการสาธิตปัญหา class imbalance
+
+### ข้อมูลสำคัญ
+
+- จำนวนตัวอย่างประมาณ **7,043 customers**
+- Target: **Churn** (Yes/No)
+- ฟีเจอร์ที่ใช้บ่อย: `tenure`, `MonthlyCharges`, `Contract`, `PaymentMethod`, `InternetService`
+</div>
+</div>
 
 ---
 
@@ -203,15 +204,107 @@ Supervised vs Unsupervised in Practice
 - มีทั้งตัวแปรเชิงตัวเลขและตัวแปรเชิงหมวดหมู่ เหมาะกับการสาธิต preprocessing
 - มี class imbalance ให้ฝึกคิดเรื่อง precision, recall และ threshold tuning
 
-### ข้อมูลสำคัญ
-
-- จำนวนตัวอย่างประมาณ **7,043 customers**
-- Target: **Churn** (Yes/No)
-- ฟีเจอร์ที่ใช้บ่อย: `tenure`, `MonthlyCharges`, `Contract`, `PaymentMethod`, `InternetService`
-
-- [IBM Telco Customer Churn on Kaggle](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)
 
 
+
+
+
+---
+## Dataset: IBM Telco Customer Churn
+
+| ฟิลด์ | ชนิด | ตัวอย่างค่า | ความหมาย |
+|---|---|---|---|
+| `customerID` | text | `7590-VHVEG` | รหัสลูกค้า |
+| `gender` | text | `Female` | เพศ |
+| `SeniorCitizen` | numeric | `0` | อายุ 60 ปีขึ้นไป (0=ไม่ใช่, 1=ใช่) |
+| `tenure` | numeric | `12` | อายุการเป็นลูกค้า (เดือน) |
+| `Contract` | text | `Month-to-month` | ประเภทสัญญา |
+| `MonthlyCharges` | numeric | `70.35` | ค่าบริการรายเดือน |
+| `TotalCharges` | text/numeric | `845.5` | ยอดชำระสะสม |
+| `Churn` | text | `Yes` | ลูกค้ายกเลิกบริการหรือไม่ |
+
+Dataset Link: <a href="https://raw.githubusercontent.com/IBM/telco-customer-churn-on-icp4d/master/data/Telco-Customer-Churn.csv"><u>Telco Customer Churn</u></a>
+
+
+---
+## 1) Business Understanding (Telco)
+
+<div class="columns">
+<div>
+
+### โจทย์ธุรกิจ
+- บริษัทต้องการลด churn เพื่อลดต้นทุนการหาลูกค้าใหม่และรักษารายได้ระยะยาว
+- เป้าหมายเชิงธุรกิจ: ลด churn rate ลงอย่างน้อย 2-3% ในไตรมาสถัดไป
+- KPI ที่ควรติดตาม: churn rate, retention rate, รายได้ที่เสี่ยงสูญเสีย
+
+### คำถามเชิงธุรกิจที่แปลงเป็นคำถามข้อมูล
+
+> ลูกค้ากลุ่มไหนมีแนวโน้มยกเลิกบริการสูง และควรออกมาตรการรักษาลูกค้าอย่างไร?
+
+</div>
+<div class="center">
+
+<img src="./fig/crispDm.png" alt="Problem to data question flow" width="520" class="img-edge">
+
+</div>
+</div>
+
+---
+## 2) Data Understanding (Telco)
+
+### ตัวแปรสำคัญที่ต้องเข้าใจก่อนวิเคราะห์
+- Target: `Churn` (Yes/No)
+- Customer profile: `gender`, `SeniorCitizen`, `Partner`, `Dependents`
+- Account info: `tenure`, `Contract`, `PaperlessBilling`, `PaymentMethod`
+- Service usage: `InternetService`, `OnlineSecurity`, `TechSupport`, `StreamingTV`
+- Revenue drivers: `MonthlyCharges`, `TotalCharges`
+
+### คำถามข้อมูลหลัก
+1. สัญญาแบบใด churn สูงสุด
+2. tenure ที่สั้นสัมพันธ์กับ churn หรือไม่
+3. ลูกค้าที่ค่าบริการสูง churn มากขึ้นหรือไม่
+4. บริการเสริมใดช่วยลด churn
+
+---
+## 3) Data Quality Checklist (Telco)
+
+ก่อนวิเคราะห์ ต้องตรวจ 5 จุดนี้ให้ครบ
+
+1. Missing values: โดยเฉพาะ `TotalCharges` ที่มักเป็นค่าว่างในบางแถว
+2. Data type: แปลง `TotalCharges` เป็น numeric และตรวจค่าที่ parse ไม่ได้
+3. Duplicate: ตรวจ `customerID` ซ้ำ
+4. Category consistency: ตรวจรูปแบบค่า `Yes/No`, `No internet service`, `No phone service`
+5. Class balance: ตรวจสัดส่วน `Churn=Yes` เทียบ `No` เพื่อวางแผนการตีความผล
+
+---
+## 4) Hands-on Colab: Business -> Data Understanding
+
+### Workshop Goal
+- สรุป churn rate ภาพรวม
+- ตรวจคุณภาพข้อมูลเบื้องต้น
+- สร้าง insight แรกเพื่อคุยกับ stakeholder
+
+```prompt
+ช่วยเขียนโค้ด Python ใน Colab เพื่อ:
+1) โหลด IBM Telco Customer Churn จากไฟล์ CSV
+2) แสดงขนาดข้อมูล, ชนิดข้อมูล, missing values
+3) แปลง TotalCharges เป็นตัวเลขและรายงานจำนวนแถวที่แปลงไม่ได้
+4) สรุป churn rate รวม และ churn rate แยกตาม Contract
+5) วาดกราฟ bar chart เปรียบเทียบ churn rate ตาม Contract
+พร้อมอธิบายโค้ดทีละขั้นตอน
+```
+
+ 
+---
+## Data Preparation Checklist
+
+รายการตรวจสอบและจัดการข้อมูลเบื้องต้นที่ควรทำก่อนวิเคราะห์
+1. ตรวจสอบ missing values และค่าผิดรูปแบบ
+2. ตรวจสอบความซ้ำซ้อนของรายการข้อมูล
+3. ตรวจสอบความสอดคล้องของหน่วยและรหัสข้อมูล
+4. ตรวจสอบ outliers และจัดการตามความเหมาะสม
+5. แปลงชนิดข้อมูลให้เหมาะสม
+6. สร้างคอลัมน์ใหม่เพื่อการวิเคราะห์
 ---
 
 ## ทบทวนประเภทของ Machine Learning
@@ -759,7 +852,34 @@ Build, Compare, and Justify
 
 ---
 
-## ตัวอย่างโครงรายงานผล (Model Card แบบย่อ)
+## Dataset: Bank Marketing Campaign (binary classification)
+
+Link for dataset download:
+- [Bank Marketing Dataset on UCI](https://archive.ics.uci.edu/ml/datasets/bank+marketing)
+
+คำอธิบาย dataset:
+- ข้อมูลเกี่ยวกับแคมเปญการตลาดทางโทรศัพท์ของธนาคาร
+- Target: `y` (yes/no) ว่าลูกค้าตอบรับหรือไม่
+- มีทั้งตัวแปรเชิงตัวเลขและเชิงหมวดหมู่ เหมาะกับการสาธิต preprocessing และ model evaluation
+- มี class imbalance (ประมาณ 11% positive) ให้ฝึกคิดเรื่อง precision, recall และ threshold tuning
+   
+ 
+---
+## ตัวอย่าง Report Outline 
+
+1. ที่มาและเป้าหมายของโจทย์
+2. คำอธิบาย Dataset
+3. ขั้นตอนการเตรียมข้อมูลและ Feature Engineering
+4. โมเดลที่เลือกใช้และเหตุผล
+5. วิธีการประเมินโมเดลและ Metrics ที่ใช้
+6. ตารางเปรียบเทียบผลลัพธ์ของโมเดล
+7. เหตุผลในการเลือกโมเดลสุดท้าย
+8. ข้อจำกัดและข้อเสนอแนะสำหรับการพัฒนาต่อ
+
+
+---
+
+## ตัวอย่าง Model Card 
 
 | หัวข้อ | สิ่งที่ต้องส่ง |
 |---|---|
@@ -854,6 +974,12 @@ Build, Compare, and Justify
 1. ISLP (An Introduction to Statistical Learning with Python): Ch. 4, 8, 10
 2. Hands-On Machine Learning (Géron): Ch. 6, 7
 3. scikit-learn docs: Model Evaluation and Imbalanced Classification
+
+---
+## Example Colab 
+
+- [Telco Churn Prediction Notebook](https://colab.research.google.com/github/IBM/telco-customer-churn-on-icp4d/blob/master/notebooks/Telco-Customer-Churn.ipynb)
+- [Bank Marketing Campaign Notebook](https://colab.research.google.com/github/IBM/bank-marketing-campaign/blob/master/notebooks/Bank-Marketing-Campaign.ipynb)
 
 ---
 
