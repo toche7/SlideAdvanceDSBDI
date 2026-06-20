@@ -574,6 +574,8 @@ AI ที่ **สร้างสิ่งใหม่** ได้ — ข้อ
 - ข้อจำกัด เช่น ใช้ SQL ประเภทใด (เช่น PostgreSQL, MySQL)
 
 
+
+
 ---
 
 ## Prompt Pattern สำหรับ SQL
@@ -603,41 +605,16 @@ Return SQL first, then a short explanation.
 - เหมาะกับ demo ที่ต้องการให้ทุกคนรันตามได้เร็ว
 - ถ้ามี CSV อยู่แล้ว สามารถโหลดเข้า pandas แล้วเขียนลง SQLite ได้ทันที
 
-### Flow ที่แนะนำ
+**Click on icon for lab:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/toche7/SlideAdvanceDSBDI/blob/main/notebook/notebook-12-13-sql-demo.ipynb)
 
-1. อัปโหลดไฟล์ CSV เข้า Colab
-2. สร้าง connection ของ SQLite
-3. โหลดข้อมูลจาก CSV เข้า table
-4. รัน SQL query แล้วแสดงผลด้วย pandas
 
-```python
-import sqlite3
-import pandas as pd
-
-# 1) อ่านข้อมูลจาก CSV
-df = pd.read_csv("customers.csv")
-
-# 2) สร้างฐานข้อมูล SQLite ชั่วคราว
-conn = sqlite3.connect(":memory:")
-
-# 3) เขียน DataFrame ลง table ชื่อ customers
-df.to_sql("customers", conn, index=False, if_exists="replace")
-
-# 4) ทดลอง query
-query = """
-SELECT contract_type, COUNT(*) AS n_customers
-FROM customers
-GROUP BY contract_type
-ORDER BY n_customers DESC;
-"""
-
-result = pd.read_sql_query(query, conn)
-result
-```
 
 ---
 
 ## Demo 2: LLM ช่วย EDA
+
+<div class="columns">
+<div>
 
 ### อินพุตที่ป้อนให้ LLM ได้
 
@@ -647,11 +624,17 @@ result
 - missing value summary
 - class distribution หรือ target distribution
 
+</div>
+<div>
+
 ### ผลลัพธ์ที่คาดหวัง
 
 - สรุป insight เบื้องต้น
-- ตั้ง hypothesis ที่ควรตรวจต่อ
-- ชี้ feature ที่น่าสนใจ
+- ตั้ง hypothesis ที่ควรตร
+
+
+</div>
+</div>
 
 ---
 
@@ -736,7 +719,7 @@ result
   - Data Generation 
   - Data Summarization
 ### Link to demo notebook
-- [Demo Notebook: LLM with Data Science](https://colab.research.google.com/drive/1a2b3c4d5e6f7g8h90i1j2k3l4m5n6o7p8q9r)
+**Click on icon for lab:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/toche7/SlideAdvanceDSBDI/blob/main/notebook/notebook-12-13-llm-data-science.ipynb)
   
 
 ---
@@ -915,6 +898,9 @@ From Single Prompt to System Design
 - ถ้าจะใช้ในองค์กร ต้องตอบจากความรู้ไหน?
 - ถ้าคำตอบผิด ใครเป็นคนตรวจ?
 
+### Link
+**Click on icon for lab:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/toche7/SlideAdvanceDSBDI/blob/main/notebook/notebook-12-13-chatbot-groq.ipynb)
+
 ---
 
 ## Chatbot, LLM, และ RAG ต่างกันอย่างไร
@@ -940,6 +926,9 @@ From Single Prompt to System Design
 
 ### Retrieval-Augmented Generation
 
+<div class="columns">
+<div>
+
 1. รับคำถามจากผู้ใช้
 2. ค้นเอกสารหรือข้อความที่เกี่ยวข้อง
 3. ส่งบริบทนั้นเข้าไปพร้อม prompt
@@ -950,8 +939,29 @@ From Single Prompt to System Design
 - ลดการตอบจากความจำเดิมของโมเดลอย่างเดียว
 - เพิ่มความสามารถในการอ้างอิงข้อมูลเฉพาะองค์กร
 
----
+</div>
+<div>
 
+![w:520px](./fig/rag.png)
+
+</div>
+</div>
+
+---
+## Rag ทำงานอย่างไร
+
+<div class="center">
+
+![w:900px](./fig/rag.png)
+
+---
+## Rag ทำงานอย่างไร
+
+<div class="center">
+
+![w:900px](./fig/vectorDB.png)
+
+---
 ## คำว่า Chunk หมายถึงอะไร
 
 ### ในระบบ RAG
